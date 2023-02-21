@@ -9,11 +9,6 @@ variable "cluster_name" {
   description = "The name of the cluster."
 }
 
-variable "cluster_identity_oidc_issuer" {
-  type        = string
-  description = "The OIDC Identity issuer for the cluster."
-}
-
 variable "cluster_identity_oidc_issuer_arn" {
   type        = string
   description = "The OIDC Identity issuer ARN for the cluster that can be used to associate IAM roles with a service account."
@@ -43,6 +38,12 @@ variable "helm_chart_version" {
   description = "AWS Load Balancer Controller Helm chart version."
 }
 
+variable "image_registry" {
+  type        = string
+  default     = "961992271922.dkr.ecr.cn-northwest-1.amazonaws.com.cn"
+  description = "AWS Load Balancer Controller image registry."
+}
+
 variable "create_namespace" {
   type        = bool
   default     = true
@@ -63,7 +64,7 @@ variable "service_account_name" {
 
 variable "arn_format" {
   type        = string
-  default     = "aws"
+  default     = "aws-cn"
   description = "ARNs identifier, usefull for GovCloud begin with `aws-us-gov-<region>`."
 }
 

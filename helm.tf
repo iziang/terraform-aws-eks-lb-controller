@@ -1,3 +1,16 @@
+provider "helm" {
+  kubernetes {
+    host                   = data.aws_eks_cluster.eks.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
+
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      command     = "aws"
+      args        = ["eks", "get-token", "--cluster-name", var.cluster_name]
+    }
+  }
+}
+
 resource "helm_release" "lb_controller" {
   depends_on = [var.mod_dependency, kubernetes_namespace.lb_controller]
   count      = var.enabled ? 1 : 0
@@ -30,6 +43,11 @@ resource "helm_release" "lb_controller" {
   set {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = aws_iam_role.lb_controller[0].arn
+  }
+
+  set {
+    name = "image.repository"
+    value = "${var.image_registry}/amazon/aws-load-balancer-controller"
   }
 
   values = [

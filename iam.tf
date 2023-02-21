@@ -347,7 +347,7 @@ data "aws_iam_policy_document" "lb_controller_assume" {
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(var.cluster_identity_oidc_issuer, "https://", "")}:sub"
+      variable = "${replace(data.aws_eks_cluster.eks.identity[0].oidc[0].issuer, "https://", "")}:sub"
 
       values = [
         "system:serviceaccount:${var.namespace}:${var.service_account_name}",
